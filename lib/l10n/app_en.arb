@@ -51,5 +51,14 @@
   "aspectRatioFull": "Full",
   "@aspectRatioFull": {
     "description": "Title for aspect ratio full"
+  },
+  "zoomLevel": "{level}x",
+  "@zoomLevel": {
+    "description": "Zoom level label",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
   }
 }

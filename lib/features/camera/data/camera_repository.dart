@@ -23,4 +23,6 @@ abstract class CameraRepository {
   Future<void> setExposurePoint(Offset point);
 
   Future<void> setExposureOffset(double offset);
+
+  Future<void> setZoomLevel(double zoomLevel);
 }

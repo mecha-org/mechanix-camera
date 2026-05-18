@@ -99,7 +99,7 @@ void main() {
   });
 
   // =========================================================================
-  group('StartOrientationListener', () {
+  group('InitializeCameraSettings', () {
     test('adds listener to controller when listener starts', () async {
       when(() => mockRepo.controller).thenReturn(mockController);
 
@@ -128,7 +128,7 @@ void main() {
 
       final bloc = CameraSettingsBloc(mockRepo);
 
-      bloc.add(const StartOrientationListener());
+      bloc.add(const InitializeCameraSettings());
 
       await Future<void>.delayed(Duration.zero);
 
@@ -142,7 +142,7 @@ void main() {
 
       final bloc = CameraSettingsBloc(mockRepo);
 
-      bloc.add(const StartOrientationListener());
+      bloc.add(const InitializeCameraSettings());
 
       await Future<void>.delayed(Duration.zero);
 
@@ -179,9 +179,9 @@ void main() {
 
       final bloc = CameraSettingsBloc(mockRepo);
 
-      bloc.add(const StartOrientationListener());
-      bloc.add(const StartOrientationListener());
-      bloc.add(const StartOrientationListener());
+      bloc.add(const InitializeCameraSettings());
+      bloc.add(const InitializeCameraSettings());
+      bloc.add(const InitializeCameraSettings());
 
       await Future<void>.delayed(Duration.zero);
 

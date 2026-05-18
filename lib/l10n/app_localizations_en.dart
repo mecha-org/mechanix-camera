@@ -46,4 +46,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aspectRatioFull => 'Full';
+
+  @override
+  String zoomLevel(int level) {
+    return '${level}x';
+  }
 }

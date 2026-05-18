@@ -18,7 +18,7 @@ class CameraPreviewWidget extends StatelessWidget {
         listener: (context, state) {
           if (state is CameraReady) {
             context.read<CameraSettingsBloc>().add(
-              const StartOrientationListener(),
+              const InitializeCameraSettings(),
             );
           }
         },

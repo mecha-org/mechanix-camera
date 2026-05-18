@@ -92,6 +92,12 @@ class CameraRepositoryImpl implements CameraRepository {
   }
 
   @override
+  Future<void> setZoomLevel(double zoomLevel) async {
+    checkControllerInitialize();
+    await _controller!.setZoomLevel(zoomLevel);
+  }
+
+  @override
   Future<List<File>> getAllStoredImages() async {
     final path = getDefaultStoragePath();
     final directory = Directory(path);

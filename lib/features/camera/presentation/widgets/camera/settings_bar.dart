@@ -33,7 +33,10 @@ class _BottomSettingsBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [_CloseButton(), _AspectRatioButton()],
+        children: [
+          _CloseButton(),
+          Row(children: [_AspectRatioButton(), _ZoomButton()]),
+        ],
       ),
     );
   }
@@ -85,6 +88,38 @@ class _AspectRatioButton extends StatelessWidget {
             image: AppConstants.aspectRatio,
             size: Size(23, 20),
           ),
+        );
+      },
+    );
+  }
+}
+
+class _ZoomButton extends StatelessWidget {
+  const _ZoomButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<CameraBloc, CameraState, CameraSettingsPanel>(
+      selector: (state) {
+        if (state is CameraReady) {
+          return state.settingsPanel;
+        }
+
+        return CameraSettingsPanel.none;
+      },
+      builder: (context, settingsPanel) {
+        final isOpen = settingsPanel == CameraSettingsPanel.zoom;
+
+        return IconButton(
+          style: SettingsBar._buttonStyle,
+          onPressed: () {
+            context.read<CameraBloc>().add(
+              OpenCameraWithSettings(
+                isOpen ? CameraSettingsPanel.none : CameraSettingsPanel.zoom,
+              ),
+            );
+          },
+          icon: const Icon(Icons.zoom_in),
         );
       },
     );

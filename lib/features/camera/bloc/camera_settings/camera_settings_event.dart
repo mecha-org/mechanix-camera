@@ -15,8 +15,8 @@ final class CameraOrientationChanged extends CameraSettingsEvent {
   List<Object> get props => [orientation];
 }
 
-final class StartOrientationListener extends CameraSettingsEvent {
-  const StartOrientationListener();
+final class InitializeCameraSettings extends CameraSettingsEvent {
+  const InitializeCameraSettings();
 
   @override
   List<Object> get props => [];
@@ -60,4 +60,12 @@ final class SetExposureOffset extends CameraSettingsEvent {
 
   @override
   List<Object> get props => [offset];
+}
+
+final class SetZoomLevel extends CameraSettingsEvent {
+  final double zoomLevel;
+  const SetZoomLevel({required this.zoomLevel});
+
+  @override
+  List<Object> get props => [zoomLevel];
 }

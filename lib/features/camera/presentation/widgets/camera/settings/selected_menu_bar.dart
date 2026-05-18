@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 import 'package:mechanix_camera/features/camera/model/camera_types.dart';
-import 'package:mechanix_camera/features/camera/presentation/widgets/camera/settings/aspect_ratio_bar.dart';
+import 'package:mechanix_camera/features/camera/presentation/widgets/camera/settings/zoom_bar.dart';
 
 class SelectedMenuBar extends StatelessWidget {
   const SelectedMenuBar({super.key});
@@ -18,11 +18,17 @@ class SelectedMenuBar extends StatelessWidget {
         return CameraSettingsPanel.none;
       },
       builder: (context, settingsPanel) {
-        if (settingsPanel == CameraSettingsPanel.aspectRatio) {
-          return const AspectRatioBar();
-        }
+        switch (settingsPanel) {
+          // TODO:Not implemented yet
+          // case CameraSettingsPanel.aspectRatio:
+          //   return const AspectRatioBar();
 
-        return const SizedBox.shrink();
+          case CameraSettingsPanel.zoom:
+            return const ZoomBar();
+
+          default:
+            return const SizedBox.shrink();
+        }
       },
     );
   }

@@ -23,16 +23,17 @@ class CameraSettingsBloc
 
   CameraSettingsBloc(this._repository) : super(const CameraSettingsState()) {
     on<CameraOrientationChanged>(_onOrientationChanged);
-    on<StartOrientationListener>(_onStartOrientationListener);
+    on<InitializeCameraSettings>(_onInitializeCameraSettings);
     on<SetFocusMode>(_onSetFocusMode);
     on<SetFocusPoint>(_onSetFocusPoint);
     on<SetExposureMode>(_onSetExposureMode);
     on<SetExposurePoint>(_onSetExposurePoint);
     on<SetExposureOffset>(_onSetExposureOffset);
+    on<SetZoomLevel>(_onSetZoomLevel);
   }
 
-  Future<void> _onStartOrientationListener(
-    StartOrientationListener event,
+  Future<void> _onInitializeCameraSettings(
+    InitializeCameraSettings event,
     Emitter<CameraSettingsState> emit,
   ) async {
     if (_isOrientationListening) return;
@@ -44,10 +45,15 @@ class CameraSettingsBloc
     final maxExposureOffset = await controller.getMaxExposureOffset();
     final minExposureOffset = await controller.getMinExposureOffset();
 
+    final maxZoomLevel = await controller.getMaxZoomLevel();
+    final minZoomLevel = await controller.getMinZoomLevel();
+
     emit(
       state.copyWith(
         maxExposureOffset: maxExposureOffset,
         minExposureOffset: minExposureOffset,
+        maxZoomLevel: maxZoomLevel,
+        minZoomLevel: minZoomLevel,
       ),
     );
 
@@ -121,6 +127,18 @@ class CameraSettingsBloc
           exposureMode: ExposureMode.locked,
         ),
       );
+    }
+  }
+
+  Future<void> _onSetZoomLevel(
+    SetZoomLevel event,
+    Emitter<CameraSettingsState> emit,
+  ) async {
+    if (event.zoomLevel >= state.minZoomLevel &&
+        event.zoomLevel <= state.maxZoomLevel) {
+      await _repository.setZoomLevel(event.zoomLevel);
+
+      emit(state.copyWith(zoomLevel: event.zoomLevel));
     }
   }
 }

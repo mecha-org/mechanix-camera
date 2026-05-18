@@ -171,6 +171,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Full'**
   String get aspectRatioFull;
+
+  /// Zoom level label
+  ///
+  /// In en, this message translates to:
+  /// **'{level}x'**
+  String zoomLevel(int level);
 }
 
 class _AppLocalizationsDelegate
