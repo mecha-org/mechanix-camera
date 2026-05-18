@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mechanix_camera/core/utils/constants.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_settings/camera_settings_bloc.dart';
 
 class BrightnessLine extends StatefulWidget {
@@ -10,11 +11,8 @@ class BrightnessLine extends StatefulWidget {
 }
 
 class _BrightnessLineState extends State<BrightnessLine> {
-  static const double _halfLineHeight = 50.0;
-  static const double _lineWidth = 1.5;
-  static const double _iconSize = 20.0;
-  static const double _gap = 4.0;
-  static const double _totalTravel = _halfLineHeight * 2;
+  static const double _totalTravel =
+      CameraFocusConstants.brightnessHalfLineHeight * 2;
 
   final ValueNotifier<double> _iconOffsetY = ValueNotifier(0.0);
 
@@ -25,23 +23,19 @@ class _BrightnessLineState extends State<BrightnessLine> {
   }
 
   void _onVerticalDrag(DragUpdateDetails details) {
-    // Drag UP   → dy is negative → subtract → offsetY decreases → upperHeight shrinks → icon moves UP
-    // Drag DOWN → dy is positive → subtract → offsetY increases → lowerHeight shrinks → icon moves DOWN
     final newOffset = (_iconOffsetY.value - details.delta.dy).clamp(
-      -_halfLineHeight,
-      _halfLineHeight,
+      -CameraFocusConstants.brightnessHalfLineHeight,
+      CameraFocusConstants.brightnessHalfLineHeight,
     );
-
     _iconOffsetY.value = newOffset;
 
     final state = context.read<CameraSettingsBloc>().state;
     final minEV = state.minExposureOffset;
     final maxEV = state.maxExposureOffset;
 
-    // offsetY == +_halfLineHeight → icon at top    → maxEV (brightest)
-    // offsetY ==  0              → icon at centre  → midpoint
-    // offsetY == -_halfLineHeight → icon at bottom → minEV (darkest)
-    final normalized = (_iconOffsetY.value + _halfLineHeight) / _totalTravel;
+    final normalized =
+        (_iconOffsetY.value + CameraFocusConstants.brightnessHalfLineHeight) /
+        _totalTravel;
     final exposureValue = minEV + (maxEV - minEV) * normalized;
 
     context.read<CameraSettingsBloc>().add(
@@ -55,21 +49,24 @@ class _BrightnessLineState extends State<BrightnessLine> {
       behavior: HitTestBehavior.opaque,
       onVerticalDragUpdate: _onVerticalDrag,
       child: Container(
-        margin: const EdgeInsets.only(left: 8),
-        height: _halfLineHeight * 2 + _iconSize + _gap * 2,
-        width: _iconSize + 8,
+        margin: const EdgeInsets.only(
+          left: CameraFocusConstants.brightnessIconLeftMargin,
+        ),
+        height: CameraFocusConstants.brightnessTotalHeight,
+        width: CameraFocusConstants.brightnessContainerWidth,
         child: ValueListenableBuilder<double>(
           valueListenable: _iconOffsetY,
           builder: (context, offsetY, _) {
-            // offsetY positive → icon is in upper half → upper segment shorter
-            final upperHeight = (_halfLineHeight - offsetY).clamp(
-              0.0,
-              _halfLineHeight * 2,
-            );
-            final lowerHeight = (_halfLineHeight + offsetY).clamp(
-              0.0,
-              _halfLineHeight * 2,
-            );
+            final upperHeight =
+                (CameraFocusConstants.brightnessHalfLineHeight - offsetY).clamp(
+                  0.0,
+                  CameraFocusConstants.brightnessHalfLineHeight * 2,
+                );
+            final lowerHeight =
+                (CameraFocusConstants.brightnessHalfLineHeight + offsetY).clamp(
+                  0.0,
+                  CameraFocusConstants.brightnessHalfLineHeight * 2,
+                );
 
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -77,15 +74,23 @@ class _BrightnessLineState extends State<BrightnessLine> {
               children: [
                 _Segment(
                   height: upperHeight,
-                  width: _lineWidth,
+                  width: CameraFocusConstants.brightnessLineWidth,
                   color: Colors.white,
                 ),
-                const SizedBox(height: _gap),
-                const Icon(Icons.sunny, size: _iconSize, color: Colors.amber),
-                const SizedBox(height: _gap),
+                const SizedBox(
+                  height: CameraFocusConstants.brightnessLineIconGap,
+                ),
+                const Icon(
+                  Icons.sunny,
+                  size: CameraFocusConstants.brightnessIconSize,
+                  color: Colors.amber,
+                ),
+                const SizedBox(
+                  height: CameraFocusConstants.brightnessLineIconGap,
+                ),
                 _Segment(
                   height: lowerHeight,
-                  width: _lineWidth,
+                  width: CameraFocusConstants.brightnessLineWidth,
                   color: Colors.amber,
                 ),
               ],

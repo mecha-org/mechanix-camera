@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
+import 'package:mechanix_camera/features/camera/model/camera_types.dart';
 import 'package:mechanix_camera/features/camera/presentation/widgets/camera/focus/brightness_line.dart';
 
 class CameraFocus extends StatefulWidget {
-  const CameraFocus({super.key});
+  final ExposureControlPosition position;
+
+  const CameraFocus({super.key, required this.position});
 
   @override
   State<CameraFocus> createState() => _CameraFocusState();
@@ -40,14 +43,18 @@ class _CameraFocusState extends State<CameraFocus>
 
   @override
   Widget build(BuildContext context) {
+    final isStart = widget.position == ExposureControlPosition.start;
+
     return ScaleTransition(
       scale: _scaleAnim,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
+          if (isStart) const BrightnessLine(),
           SizedBox(
-            width: AppConstants.focusSize.width,
-            height: AppConstants.focusSize.height,
+            width: CameraFocusConstants.focusBoxSize,
+            height: CameraFocusConstants.focusBoxSize,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.white, width: 1.5),
@@ -55,6 +62,7 @@ class _CameraFocusState extends State<CameraFocus>
             ),
           ),
           const BrightnessLine(),
+          if (!isStart) const BrightnessLine(),
         ],
       ),
     );

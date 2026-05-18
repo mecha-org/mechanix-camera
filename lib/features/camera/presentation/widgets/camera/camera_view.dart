@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_settings/camera_settings_bloc.dart';
+import 'package:mechanix_camera/features/camera/model/camera_types.dart';
 import 'package:mechanix_camera/features/camera/presentation/widgets/camera/focus/camera_focus.dart';
 
 class CameraView extends StatefulWidget {
@@ -15,14 +16,25 @@ class CameraView extends StatefulWidget {
 
 class _CameraViewState extends State<CameraView> {
   final ValueNotifier<bool> _focusVisible = ValueNotifier(false);
-  Offset _focusPosition = Offset.zero;
+  Offset _tapPosition = Offset.zero;
+  ExposureControlPosition _brightnessPosition = ExposureControlPosition.end;
 
-  Offset _clampFocusPosition(Offset raw, BoxConstraints constraints) {
-    final halfW = AppConstants.focusSize.width / 2;
-    final halfH = AppConstants.focusSize.height / 2;
+  ExposureControlPosition _decideSide(Offset tap, BoxConstraints constraints) {
+    final spaceOnRight = constraints.maxWidth - tap.dx;
+    final spaceNeeded =
+        (CameraFocusConstants.focusBoxSize / 2) +
+        CameraFocusConstants.brightnessTotalWidth;
+
+    return spaceOnRight < spaceNeeded
+        ? ExposureControlPosition.start
+        : ExposureControlPosition.end;
+  }
+
+  Offset _clampTap(Offset raw, BoxConstraints constraints) {
+    final half = CameraFocusConstants.focusBoxSize / 2;
     return Offset(
-      raw.dx.clamp(halfW, constraints.maxWidth - halfW),
-      raw.dy.clamp(halfH, constraints.maxHeight - halfH),
+      raw.dx.clamp(half, constraints.maxWidth - half),
+      raw.dy.clamp(half, constraints.maxHeight - half),
     );
   }
 
@@ -30,7 +42,8 @@ class _CameraViewState extends State<CameraView> {
     TapDownDetails details,
     BoxConstraints constraints,
   ) async {
-    _focusPosition = _clampFocusPosition(details.localPosition, constraints);
+    _brightnessPosition = _decideSide(details.localPosition, constraints);
+    _tapPosition = _clampTap(details.localPosition, constraints);
 
     if (_focusVisible.value) {
       _focusVisible.value = false;
@@ -83,15 +96,21 @@ class _CameraViewState extends State<CameraView> {
         ValueListenableBuilder<bool>(
           valueListenable: _focusVisible,
           builder: (context, isVisible, _) {
-            // ✅ Positioned must be a direct child of Stack, not inside AnimatedOpacity
+            final focusBoxLeft =
+                _tapPosition.dx - (CameraFocusConstants.focusBoxSize / 2);
+
+            final left = _brightnessPosition == ExposureControlPosition.start
+                ? focusBoxLeft - CameraFocusConstants.brightnessTotalWidth
+                : focusBoxLeft;
+
             return Positioned(
-              left: _focusPosition.dx - (AppConstants.focusSize.width / 2),
-              top: _focusPosition.dy - (AppConstants.focusSize.height / 2),
+              left: left,
+              top: _tapPosition.dy - (CameraFocusConstants.focusBoxSize / 2),
               child: AnimatedOpacity(
                 opacity: isVisible ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
                 child: isVisible
-                    ? const CameraFocus()
+                    ? CameraFocus(position: _brightnessPosition)
                     : const SizedBox.shrink(),
               ),
             );
