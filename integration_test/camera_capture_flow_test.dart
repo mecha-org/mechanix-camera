@@ -22,6 +22,11 @@ class MockCameraController extends Mock implements CameraController {}
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() {
+    registerFallbackValue(FocusMode.auto);
+    registerFallbackValue(ExposureMode.auto);
+  });
+
   group('Camera App Integration Test', () {
     late MockCameraRepository mockRepo;
     late MockCameraController mockController;
@@ -35,6 +40,8 @@ void main() {
       when(() => mockRepo.controller).thenReturn(mockController);
       when(() => mockRepo.dispose()).thenAnswer((_) async {});
       when(() => mockRepo.getAllStoredImages()).thenAnswer((_) async => []);
+      when(() => mockRepo.setFocusMode(any())).thenAnswer((_) async {});
+      when(() => mockRepo.setExposureMode(any())).thenAnswer((_) async {});
 
       // Stub controller properties used in UI
       const controllerValue = CameraValue(
@@ -60,6 +67,10 @@ void main() {
       );
       when(() => mockController.value).thenReturn(controllerValue);
       when(() => mockController.buildPreview()).thenReturn(Container());
+      when(() => mockController.getMaxExposureOffset()).thenAnswer((_) async => 2.0);
+      when(() => mockController.getMinExposureOffset()).thenAnswer((_) async => -2.0);
+      when(() => mockController.getMaxZoomLevel()).thenAnswer((_) async => 8.0);
+      when(() => mockController.getMinZoomLevel()).thenAnswer((_) async => 1.0);
     });
 
     testWidgets('Capture image and navigate to preview flow', (tester) async {

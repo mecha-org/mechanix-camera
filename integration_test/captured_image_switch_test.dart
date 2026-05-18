@@ -21,6 +21,11 @@ class MockCameraController extends Mock implements CameraController {}
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() {
+    registerFallbackValue(FocusMode.auto);
+    registerFallbackValue(ExposureMode.auto);
+  });
+
   group('Captured Image Switching Integration Test', () {
     late MockCameraRepository mockRepo;
     late MockCameraController mockController;
@@ -47,6 +52,8 @@ void main() {
       when(() => mockRepo.initialize()).thenAnswer((_) async => mockController);
       when(() => mockRepo.controller).thenReturn(mockController);
       when(() => mockRepo.dispose()).thenAnswer((_) async {});
+      when(() => mockRepo.setFocusMode(any())).thenAnswer((_) async {});
+      when(() => mockRepo.setExposureMode(any())).thenAnswer((_) async {});
 
       // Stub getAllStoredImages to return our dummies
       when(
@@ -76,6 +83,10 @@ void main() {
       );
       when(() => mockController.value).thenReturn(controllerValue);
       when(() => mockController.buildPreview()).thenReturn(Container());
+      when(() => mockController.getMaxExposureOffset()).thenAnswer((_) async => 2.0);
+      when(() => mockController.getMinExposureOffset()).thenAnswer((_) async => -2.0);
+      when(() => mockController.getMaxZoomLevel()).thenAnswer((_) async => 8.0);
+      when(() => mockController.getMinZoomLevel()).thenAnswer((_) async => 1.0);
     });
 
     tearDown(() async {

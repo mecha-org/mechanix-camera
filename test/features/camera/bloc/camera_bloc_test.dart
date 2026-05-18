@@ -24,18 +24,41 @@ void main() {
   late MockCameraRepository mockRepo;
   late MockCameraController mockController;
 
+  setUpAll(() {
+    registerFallbackValue(FocusMode.auto);
+    registerFallbackValue(ExposureMode.auto);
+  });
+
   setUp(() {
     mockRepo = MockCameraRepository();
     mockController = MockCameraController();
     // CameraBloc.close() always calls _repository.dispose(), so stub it
     // globally to avoid MissingStubError on every test teardown.
     when(() => mockRepo.dispose()).thenAnswer((_) async {});
+    when(() => mockRepo.setFocusMode(any())).thenAnswer((_) async {});
+    when(() => mockRepo.setExposureMode(any())).thenAnswer((_) async {});
   });
 
   // ── Initial state ────────────────────────────────────────────────────────
 
   test('initial state is CameraInitial', () {
     expect(CameraBloc(mockRepo).state, isA<CameraInitial>());
+  });
+
+  // ── controller getter ───────────────────────────────────────────────────
+
+  group('controller getter', () {
+    test('throws StateError when controller is null', () {
+      final bloc = CameraBloc(mockRepo);
+      when(() => mockRepo.controller).thenReturn(null);
+      expect(() => bloc.controller, throwsStateError);
+    });
+
+    test('returns controller when controller is not null', () {
+      final bloc = CameraBloc(mockRepo);
+      when(() => mockRepo.controller).thenReturn(mockController);
+      expect(bloc.controller, mockController);
+    });
   });
 
   // =========================================================================
@@ -298,6 +321,27 @@ void main() {
         ),
       ],
     );
+
+    // ── droppable: only the first event is processed ─────────────────────
+
+    blocTest<CameraBloc, CameraState>(
+      'ignores subsequent CameraCaptureRequested events while first is in progress (droppable)',
+      build: () {
+        arrangeReady();
+        when(() => mockRepo.capture()).thenAnswer((_) async {
+          await Future.delayed(const Duration(milliseconds: 50));
+          return 'photo.jpg';
+        });
+        return CameraBloc(mockRepo);
+      },
+      seed: () => const CameraReady(),
+      act: (bloc) async {
+        bloc.add(CameraCaptureRequested());
+        bloc.add(CameraCaptureRequested());
+        bloc.add(CameraCaptureRequested());
+      },
+      verify: (_) => verify(() => mockRepo.capture()).called(1),
+    );
   });
 
   // =========================================================================
@@ -361,6 +405,26 @@ void main() {
       seed: () => CameraInitial(),
       act: (bloc) => bloc.add(LastCaptureImageRequested()),
       expect: () => [],
+    );
+
+    // ── droppable: only the first event is processed ─────────────────────
+
+    blocTest<CameraBloc, CameraState>(
+      'ignores subsequent LastCaptureImageRequested events while first is in progress (droppable)',
+      build: () {
+        when(() => mockRepo.getAllStoredImages()).thenAnswer((_) async {
+          await Future.delayed(const Duration(milliseconds: 50));
+          return [];
+        });
+        return CameraBloc(mockRepo);
+      },
+      seed: () => const CameraReady(lastCapturedPath: 'photo.jpg'),
+      act: (bloc) async {
+        bloc.add(LastCaptureImageRequested());
+        bloc.add(LastCaptureImageRequested());
+        bloc.add(LastCaptureImageRequested());
+      },
+      verify: (_) => verify(() => mockRepo.getAllStoredImages()).called(1),
     );
   });
 

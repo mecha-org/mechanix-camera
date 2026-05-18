@@ -37,10 +37,14 @@ class CameraSettingsBloc
     Emitter<CameraSettingsState> emit,
   ) async {
     if (_isOrientationListening) return;
+    _isOrientationListening = true;
 
     final controller = _repository.controller;
 
-    if (controller == null) return;
+    if (controller == null) {
+      _isOrientationListening = false;
+      return;
+    }
 
     final maxExposureOffset = await controller.getMaxExposureOffset();
     final minExposureOffset = await controller.getMinExposureOffset();
@@ -56,8 +60,6 @@ class CameraSettingsBloc
         minZoomLevel: minZoomLevel,
       ),
     );
-
-    _isOrientationListening = true;
 
     var lastOrientation = controller.value.deviceOrientation;
 

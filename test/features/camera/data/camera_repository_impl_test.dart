@@ -99,6 +99,49 @@ class TestableCameraRepositoryImpl extends CameraRepositoryImpl {
     await _testController?.dispose();
     _testController = null;
   }
+
+  @override
+  void checkControllerInitialize() {
+    if (_testController == null || !_testController!.value.isInitialized) {
+      throw Exception('Camera is not initialized.');
+    }
+  }
+
+  @override
+  Future<void> setFocusMode(FocusMode focusMode) async {
+    checkControllerInitialize();
+    await _testController!.setFocusMode(focusMode);
+  }
+
+  @override
+  Future<void> setFocusPoint(Offset point) async {
+    checkControllerInitialize();
+    await _testController!.setFocusPoint(point);
+  }
+
+  @override
+  Future<void> setExposureMode(ExposureMode exposureMode) async {
+    checkControllerInitialize();
+    await _testController!.setExposureMode(exposureMode);
+  }
+
+  @override
+  Future<void> setExposurePoint(Offset point) async {
+    checkControllerInitialize();
+    await _testController!.setExposurePoint(point);
+  }
+
+  @override
+  Future<void> setExposureOffset(double offset) async {
+    checkControllerInitialize();
+    await _testController!.setExposureOffset(offset);
+  }
+
+  @override
+  Future<void> setZoomLevel(double zoomLevel) async {
+    checkControllerInitialize();
+    await _testController!.setZoomLevel(zoomLevel);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -106,6 +149,12 @@ class TestableCameraRepositoryImpl extends CameraRepositoryImpl {
 // ---------------------------------------------------------------------------
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FocusMode.auto);
+    registerFallbackValue(ExposureMode.auto);
+    registerFallbackValue(const Offset(0, 0));
+  });
+
   late MockCameraController mockController;
   late MockCameraValue mockValue;
   late TestableCameraRepositoryImpl repo;
@@ -548,6 +597,110 @@ void main() {
           ).thenAnswer((_) => const Stream.empty());
           return mockDir;
         },
+      );
+    });
+  });
+
+  // =========================================================================
+  group('camera control methods', () {
+    setUp(() async {
+      await repo.initialize();
+    });
+
+    test('setFocusMode() forwards call to controller', () async {
+      when(() => mockController.setFocusMode(any())).thenAnswer((_) async {});
+
+      await repo.setFocusMode(FocusMode.auto);
+
+      verify(() => mockController.setFocusMode(FocusMode.auto)).called(1);
+    });
+
+    test('setFocusPoint() forwards call to controller', () async {
+      const point = Offset(0.5, 0.5);
+
+      when(() => mockController.setFocusPoint(any())).thenAnswer((_) async {});
+
+      await repo.setFocusPoint(point);
+
+      verify(() => mockController.setFocusPoint(point)).called(1);
+    });
+
+    test('setExposureMode() forwards call to controller', () async {
+      when(
+        () => mockController.setExposureMode(any()),
+      ).thenAnswer((_) async {});
+
+      await repo.setExposureMode(ExposureMode.auto);
+
+      verify(() => mockController.setExposureMode(ExposureMode.auto)).called(1);
+    });
+
+    test('setExposurePoint() forwards call to controller', () async {
+      const point = Offset(0.3, 0.7);
+
+      when(
+        () => mockController.setExposurePoint(any()),
+      ).thenAnswer((_) async {});
+
+      await repo.setExposurePoint(point);
+
+      verify(() => mockController.setExposurePoint(point)).called(1);
+    });
+
+    test('setExposureOffset() forwards call to controller', () async {
+      when(
+        () => mockController.setExposureOffset(any()),
+      ).thenAnswer((_) async => 1.0);
+
+      await repo.setExposureOffset(1.5);
+
+      verify(() => mockController.setExposureOffset(1.5)).called(1);
+    });
+
+    test('setZoomLevel() forwards call to controller', () async {
+      when(() => mockController.setZoomLevel(any())).thenAnswer((_) async {});
+
+      await repo.setZoomLevel(2.0);
+
+      verify(() => mockController.setZoomLevel(2.0)).called(1);
+    });
+  });
+
+  // =========================================================================
+  group('checkControllerInitialize()', () {
+    test('does not throw when controller is initialized', () async {
+      await repo.initialize();
+
+      expect(() => repo.checkControllerInitialize(), returnsNormally);
+    });
+
+    test('throws when controller is null', () {
+      expect(
+        () => repo.checkControllerInitialize(),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Camera is not initialized'),
+          ),
+        ),
+      );
+    });
+
+    test('throws when controller is not initialized', () async {
+      when(() => mockValue.isInitialized).thenReturn(false);
+
+      await repo.initialize();
+
+      expect(
+        () => repo.checkControllerInitialize(),
+        throwsA(
+          isA<Exception>().having(
+            (e) => e.toString(),
+            'message',
+            contains('Camera is not initialized'),
+          ),
+        ),
       );
     });
   });
