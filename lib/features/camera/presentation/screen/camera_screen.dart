@@ -9,36 +9,31 @@ class CameraScreen extends StatelessWidget {
   const CameraScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          const Positioned.fill(child: CameraPreviewWidget()),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
-              child: CameraFooter(),
+  Widget build(BuildContext context) => Scaffold(
+    body: Stack(
+      children: [
+        const Positioned.fill(child: CameraPreviewWidget()),
+        const Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 20, left: 10, right: 10),
+            child: CameraFooter(),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: ColoredBox(
+            color: Colors.black,
+            child: BlocBuilder<CameraBloc, CameraState>(
+              builder: (context, state) => switch (state) {
+                CameraReady(isSettingsOpen: false) => const SizedBox.shrink(),
+                CameraReady(isSettingsOpen: true) => const SettingsBar(),
+                _ => const SizedBox.shrink(),
+              },
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              color: Colors.black,
-              child: BlocBuilder<CameraBloc, CameraState>(
-                builder: (context, state) {
-                  return switch (state) {
-                    CameraReady(isSettingsOpen: false) =>
-                      const SizedBox.shrink(),
-                    CameraReady(isSettingsOpen: true) => const SettingsBar(),
-                    _ => const SizedBox.shrink(),
-                  };
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }

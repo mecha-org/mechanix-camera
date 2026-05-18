@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:mechanix_camera/core/utils/app_logger.dart';
@@ -60,12 +61,66 @@ class CameraRepositoryImpl implements CameraRepository {
     return savePath;
   }
 
+  @override
+  Future<void> setFocusMode(FocusMode focusMode) async {
+    checkControllerInitialize();
+    await _controller!.setFocusMode(focusMode);
+  }
+
+  @override
+  Future<void> setFocusPoint(Offset point) async {
+    checkControllerInitialize();
+    await _controller!.setFocusPoint(point);
+  }
+
+  @override
+  Future<void> setExposureMode(ExposureMode exposureMode) async {
+    checkControllerInitialize();
+    await _controller!.setExposureMode(exposureMode);
+  }
+
+  @override
+  Future<void> setExposurePoint(Offset point) async {
+    checkControllerInitialize();
+    await _controller!.setExposurePoint(point);
+  }
+
+  @override
+  Future<void> setExposureOffset(double offset) async {
+    checkControllerInitialize();
+    await _controller!.setExposureOffset(offset);
+  }
+
+  @override
+  Future<List<File>> getAllStoredImages() async {
+    final path = getDefaultStoragePath();
+    final directory = Directory(path);
+
+    final files = await directory
+        .list()
+        .where((entity) => entity is File)
+        .cast<File>()
+        .toList();
+
+    return files;
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _controller?.dispose();
+    _controller = null;
+  }
+
+  void checkControllerInitialize() {
+    if (_controller == null || !_controller!.value.isInitialized) {
+      throw Exception('Camera is not initialized.');
+    }
+  }
+
   Future<void> checkStorage() async {
     final result = await Process.run('df', ['-k', '/']);
 
     if (result.exitCode == 0) {
-      AppLogger.i(result.stdout);
-
       final lines = result.stdout.toString().trim().split('\n');
 
       final columns = lines[1].split(RegExp(r'\s+'));
@@ -93,28 +148,8 @@ class CameraRepositoryImpl implements CameraRepository {
     return '$homeDir/Pictures/Camera';
   }
 
-  @override
-  Future<void> dispose() async {
-    await _controller?.dispose();
-    _controller = null;
-  }
-
   void orientationChange() {
     _controller!.lockCaptureOrientation();
     _controller!.value.deviceOrientation;
-  }
-
-  @override
-  Future<List<File>> getAllStoredImages() async {
-    final path = getDefaultStoragePath();
-    final directory = Directory(path);
-
-    final files = await directory
-        .list()
-        .where((entity) => entity is File)
-        .cast<File>()
-        .toList();
-
-    return files;
   }
 }

@@ -60,6 +60,9 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
         return;
       }
 
+      await _repository.setFocusMode(FocusMode.auto);
+      await _repository.setExposureMode(ExposureMode.auto);
+
       emit(const CameraReady());
     } on CameraException catch (e) {
       switch (e.code) {

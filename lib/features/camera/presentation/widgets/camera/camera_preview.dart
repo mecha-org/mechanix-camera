@@ -1,8 +1,8 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_settings/camera_settings_bloc.dart';
+import 'package:mechanix_camera/features/camera/presentation/widgets/camera/camera_view.dart';
 import 'package:mechanix_camera/features/camera/presentation/widgets/camera/capture_flash_overlay.dart';
 import 'package:mechanix_camera/l10n/app_localizations.dart';
 
@@ -11,8 +11,6 @@ class CameraPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<CameraBloc>();
-
     return SizedBox(
       height: double.infinity,
       width: double.infinity,
@@ -37,7 +35,7 @@ class CameraPreviewWidget extends StatelessWidget {
                   ),
 
                   CameraReady() ||
-                  CameraCaptureInProgress() => CameraPreview(bloc.controller),
+                  CameraCaptureInProgress() => const CameraView(),
 
                   CameraError() => Center(
                     child: Column(
