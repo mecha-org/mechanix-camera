@@ -28,4 +28,6 @@ abstract final class CameraFocusConstants {
       brightnessHalfLineHeight * 2 +
       brightnessIconSize +
       brightnessLineIconGap * 2;
+
+  static const double totalTravel = brightnessHalfLineHeight * 2;
 }

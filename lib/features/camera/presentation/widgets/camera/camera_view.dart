@@ -1,3 +1,5 @@
+// camera_view.dart
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,11 +18,14 @@ class CameraView extends StatefulWidget {
 
 class _CameraViewState extends State<CameraView> {
   final ValueNotifier<bool> _focusVisible = ValueNotifier(false);
+
   Offset _tapPosition = Offset.zero;
+
   ExposureControlPosition _brightnessPosition = ExposureControlPosition.end;
 
   ExposureControlPosition _decideSide(Offset tap, BoxConstraints constraints) {
     final spaceOnRight = constraints.maxWidth - tap.dx;
+
     final spaceNeeded =
         (CameraFocusConstants.focusBoxSize / 2) +
         CameraFocusConstants.brightnessTotalWidth;
@@ -32,6 +37,7 @@ class _CameraViewState extends State<CameraView> {
 
   Offset _clampTap(Offset raw, BoxConstraints constraints) {
     final half = CameraFocusConstants.focusBoxSize / 2;
+
     return Offset(
       raw.dx.clamp(half, constraints.maxWidth - half),
       raw.dy.clamp(half, constraints.maxHeight - half),
@@ -43,12 +49,14 @@ class _CameraViewState extends State<CameraView> {
     BoxConstraints constraints,
   ) async {
     _brightnessPosition = _decideSide(details.localPosition, constraints);
+
     _tapPosition = _clampTap(details.localPosition, constraints);
 
     if (_focusVisible.value) {
       _focusVisible.value = false;
       await Future.microtask(() {});
     }
+
     _focusVisible.value = true;
 
     final normalized = Offset(
@@ -59,14 +67,13 @@ class _CameraViewState extends State<CameraView> {
     if (!mounted) return;
 
     final settingsBloc = context.read<CameraSettingsBloc>();
+
     settingsBloc
       ..add(SetFocusPoint(point: normalized))
       ..add(SetExposurePoint(point: normalized))
-      ..add(const SetFocusMode(focusMode: FocusMode.auto));
-
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    settingsBloc.add(const SetFocusMode(focusMode: FocusMode.locked));
+      ..add(const SetFocusMode(focusMode: FocusMode.auto))
+      ..add(const SetExposureMode(exposureMode: ExposureMode.auto));
+    // ..add(const SetExposureOffset(offset: 0.0));
   }
 
   @override
@@ -88,7 +95,9 @@ class _CameraViewState extends State<CameraView> {
             builder: (context, constraints) {
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
-                onTapDown: (details) => _onTapDown(details, constraints),
+                onTapDown: (details) {
+                  _onTapDown(details, constraints);
+                },
               );
             },
           ),

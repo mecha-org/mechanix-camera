@@ -11,10 +11,15 @@ class BrightnessLine extends StatefulWidget {
 }
 
 class _BrightnessLineState extends State<BrightnessLine> {
-  static const double _totalTravel =
-      CameraFocusConstants.brightnessHalfLineHeight * 2;
-
   final ValueNotifier<double> _iconOffsetY = ValueNotifier(0.0);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _iconOffsetY.value = 0.0;
+    });
+  }
 
   @override
   void dispose() {
@@ -35,7 +40,7 @@ class _BrightnessLineState extends State<BrightnessLine> {
 
     final normalized =
         (_iconOffsetY.value + CameraFocusConstants.brightnessHalfLineHeight) /
-        _totalTravel;
+        CameraFocusConstants.totalTravel;
     final exposureValue = minEV + (maxEV - minEV) * normalized;
 
     context.read<CameraSettingsBloc>().add(

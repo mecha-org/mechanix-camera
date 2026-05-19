@@ -1,3 +1,5 @@
+// camera_focus.dart
+
 import 'package:flutter/material.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
 import 'package:mechanix_camera/features/camera/model/camera_types.dart';
@@ -15,6 +17,7 @@ class CameraFocus extends StatefulWidget {
 class _CameraFocusState extends State<CameraFocus>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
+
   late final Animation<double> _scaleAnim;
 
   @override
@@ -36,7 +39,6 @@ class _CameraFocusState extends State<CameraFocus>
 
   @override
   void dispose() {
-    _controller.stop();
     _controller.dispose();
     super.dispose();
   }
@@ -51,7 +53,7 @@ class _CameraFocusState extends State<CameraFocus>
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (isStart) const BrightnessLine(),
+          if (isStart) BrightnessLine(key: UniqueKey()),
           SizedBox(
             width: CameraFocusConstants.focusBoxSize,
             height: CameraFocusConstants.focusBoxSize,
@@ -61,7 +63,7 @@ class _CameraFocusState extends State<CameraFocus>
               ),
             ),
           ),
-          if (!isStart) const BrightnessLine(),
+          if (!isStart) BrightnessLine(key: UniqueKey()),
         ],
       ),
     );

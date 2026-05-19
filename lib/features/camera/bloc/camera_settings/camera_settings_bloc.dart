@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/services.dart';
+import 'package:mechanix_camera/core/utils/app_logger.dart';
 import 'package:mechanix_camera/features/camera/data/camera_repository.dart';
 
 part 'camera_settings_event.dart';
@@ -12,6 +15,8 @@ class CameraSettingsBloc
   final CameraRepository _repository;
 
   bool _isOrientationListening = false;
+
+  Timer? _exposureDebounce;
 
   CameraController get controller {
     final ctrl = _repository.controller;
@@ -52,6 +57,10 @@ class CameraSettingsBloc
     final maxZoomLevel = await controller.getMaxZoomLevel();
     final minZoomLevel = await controller.getMinZoomLevel();
 
+    AppLogger.i(
+      'Max Exposure Offset: $maxExposureOffset, Min Exposure Offset: $minExposureOffset',
+    );
+
     emit(
       state.copyWith(
         maxExposureOffset: maxExposureOffset,
@@ -88,8 +97,8 @@ class CameraSettingsBloc
     SetFocusMode event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    emit(state.copyWith(focusMode: event.focusMode));
     await _repository.setFocusMode(event.focusMode);
+    emit(state.copyWith(focusMode: event.focusMode));
   }
 
   Future<void> _onSetFocusPoint(
@@ -103,8 +112,8 @@ class CameraSettingsBloc
     SetExposureMode event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    emit(state.copyWith(exposureMode: event.exposureMode));
     await _repository.setExposureMode(event.exposureMode);
+    emit(state.copyWith(exposureMode: event.exposureMode));
   }
 
   Future<void> _onSetExposurePoint(
@@ -120,15 +129,12 @@ class CameraSettingsBloc
   ) async {
     if (event.offset >= state.minExposureOffset &&
         event.offset <= state.maxExposureOffset) {
-      await _repository.setExposureOffset(event.offset);
-      await _repository.setExposureMode(ExposureMode.locked);
+      _exposureDebounce?.cancel();
+      _exposureDebounce = Timer(const Duration(milliseconds: 16), () async {
+        await _repository.setExposureOffset(event.offset);
+      });
 
-      emit(
-        state.copyWith(
-          exposureOffset: event.offset,
-          exposureMode: ExposureMode.locked,
-        ),
-      );
+      emit(state.copyWith(exposureOffset: event.offset));
     }
   }
 
