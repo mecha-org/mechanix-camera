@@ -61,7 +61,6 @@ class _CameraFocusState extends State<CameraFocus>
               ),
             ),
           ),
-          const BrightnessLine(),
           if (!isStart) const BrightnessLine(),
         ],
       ),
