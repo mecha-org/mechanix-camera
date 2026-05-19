@@ -119,7 +119,10 @@ class _CameraViewState extends State<CameraView> {
                 opacity: isVisible ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
                 child: isVisible
-                    ? CameraFocus(position: _brightnessPosition)
+                    ? CameraFocus(
+                        key: UniqueKey(),
+                        position: _brightnessPosition,
+                      )
                     : const SizedBox.shrink(),
               ),
             );
