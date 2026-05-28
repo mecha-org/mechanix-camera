@@ -35,6 +35,9 @@ class _OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(onPressed: onTap, child: Text(label));
+    return TextButton(
+      onPressed: onTap,
+      child: Text(label, style: const TextStyle(color: Colors.white)),
+    );
   }
 }
