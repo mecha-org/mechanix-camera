@@ -92,9 +92,11 @@ packages:
   camera_elinux:
     dependency: "direct main"
     description:
-      path: "/home/ojash/mecha/flutter-elinux-plugins/packages/camera"
-      relative: false
-    source: path
+      path: "packages/camera"
+      ref: main
+      resolved-ref: e7129f0563f985868db2c228589fb2e7e52ecf47
+      url: "https://github.com/ojas-mecha/flutter-elinux-plugins.git"
+    source: git
     version: "0.3.2"
   camera_platform_interface:
     dependency: transitive

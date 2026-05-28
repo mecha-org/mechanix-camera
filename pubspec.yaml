@@ -37,13 +37,14 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.8
   camera: ^0.12.0+1
-  # camera_elinux:
-  #   git:
-  #     url: https://github.com/flutter-elinux/flutter-elinux-plugins.git
-  #     path: packages/camera
-  #     ref: main
   camera_elinux:
-    path: /home/ojash/mecha/flutter-elinux-plugins/packages/camera
+    git:
+      url: https://github.com/ojas-mecha/flutter-elinux-plugins.git
+      path: packages/camera
+      ref: main
+  # camera_elinux:
+  #   path: /home/ojash/mecha/flutter-elinux-plugins/packages/camera
+
   bloc: ^9.2.0
   bloc_concurrency: ^0.3.0
   show_fps: ^1.1.0
