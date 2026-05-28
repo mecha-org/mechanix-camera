@@ -73,7 +73,6 @@ class _CameraViewState extends State<CameraView> {
       ..add(SetExposurePoint(point: normalized))
       ..add(const SetFocusMode(focusMode: FocusMode.auto))
       ..add(const SetExposureMode(exposureMode: ExposureMode.auto));
-    // ..add(const SetExposureOffset(offset: 0.0));
   }
 
   @override

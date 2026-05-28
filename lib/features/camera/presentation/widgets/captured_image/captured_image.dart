@@ -34,7 +34,12 @@ class CapturedImage extends StatelessWidget {
                             physics: const AlwaysScrollableScrollPhysics(),
                             itemCount: state.files.length,
                             itemBuilder: (context, index) {
-                              return _ImageTile(path: state.files[index].path);
+                              return _ImageTile(
+                                path: state.files[index].path,
+                                isSelected:
+                                    state.files[index].path ==
+                                    state.lastCapturedPath,
+                              );
                             },
                           ),
                         ),
@@ -50,9 +55,10 @@ class CapturedImage extends StatelessWidget {
 }
 
 class _ImageTile extends StatelessWidget {
-  const _ImageTile({required this.path});
+  const _ImageTile({required this.path, required this.isSelected});
 
   final String path;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +67,11 @@ class _ImageTile extends StatelessWidget {
         context.read<CameraBloc>().add(CameraCapturedImageSelected(path));
       },
       child: Container(
-        color: Colors.black,
         margin: const EdgeInsets.symmetric(horizontal: 5),
+        decoration: BoxDecoration(
+          color: Colors.black,
+          border: isSelected ? Border.all(color: Colors.blue, width: 2) : null,
+        ),
         child: _ImageView(path: path),
       ),
     );
