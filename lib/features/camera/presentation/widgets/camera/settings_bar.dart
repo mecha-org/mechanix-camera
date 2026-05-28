@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
-import 'package:mechanix_camera/core/utils/images.dart';
+import 'package:mechanix_camera/core/widgets/images.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 import 'package:mechanix_camera/features/camera/model/camera_types.dart';
 import 'package:mechanix_camera/features/camera/presentation/widgets/camera/settings/selected_menu_bar.dart';

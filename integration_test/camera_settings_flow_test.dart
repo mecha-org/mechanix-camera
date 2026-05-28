@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
-import 'package:mechanix_camera/core/utils/images.dart';
+import 'package:mechanix_camera/core/widgets/images.dart';
 import 'package:mechanix_camera/features/camera/data/camera_repository.dart';
 import 'package:mechanix_camera/features/camera/presentation/screen/camera_screen.dart';
 import 'package:mechanix_camera/features/camera/presentation/widgets/camera/settings/zoom_bar.dart';
