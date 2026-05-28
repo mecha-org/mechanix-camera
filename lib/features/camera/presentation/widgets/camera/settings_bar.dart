@@ -35,7 +35,12 @@ class _BottomSettingsBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _CloseButton(),
-          Row(children: [_AspectRatioButton(), _ZoomButton()]),
+          Row(
+            children: [
+              // _AspectRatioButton(), // TODO:Not implemented yet
+              _ZoomButton(),
+            ],
+          ),
         ],
       ),
     );

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mechanix_camera/core/utils/app_routes.dart';
@@ -7,6 +9,7 @@ import 'package:mechanix_camera/features/camera/data/camera_repository.dart';
 import 'package:mechanix_camera/features/camera/data/camera_repository_impl.dart';
 import 'package:mechanix_camera/features/camera/presentation/screen/camera_screen.dart';
 import 'package:mechanix_camera/l10n/app_localizations.dart';
+import 'package:show_fps/show_fps.dart';
 
 void main() {
   runApp(const CameraApp());
@@ -17,6 +20,8 @@ class CameraApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showFps = Platform.environment['SHOW_FPS'] == 'true';
+
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<CameraRepository>(
@@ -52,6 +57,15 @@ class CameraApp extends StatelessWidget {
           ),
           routes: AppRoutes.routes,
           home: const CameraScreen(),
+          builder: showFps
+              ? (context, child) {
+                  return ShowFPS(
+                    visible: showFps,
+                    showChart: false,
+                    child: child!,
+                  );
+                }
+              : null,
         ),
       ),
     );

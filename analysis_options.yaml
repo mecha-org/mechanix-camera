@@ -34,7 +34,7 @@ analyzer:
   errors:
     prefer_const_constructors: error
     prefer_const_literals_to_create_immutables: error
-    prefer_single_quotes: error  # ← add this if you want it as error too
+    prefer_single_quotes: error # ← add this if you want it as error too
 
 linter:
   rules:
