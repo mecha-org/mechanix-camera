@@ -102,16 +102,20 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     LastCaptureImageRequested event,
     Emitter<CameraState> emit,
   ) async {
-    if (state is CameraReady &&
-        (state as CameraReady).lastCapturedPath != null) {
-      final files = await _repository.getAllStoredImages();
+    try {
+      if (state is CameraReady &&
+          (state as CameraReady).lastCapturedPath != null) {
+        final files = await _repository.getAllStoredImages();
 
-      emit(
-        CapturedImagePreview(
-          lastCapturedPath: (state as CameraReady).lastCapturedPath!,
-          files: files,
-        ),
-      );
+        emit(
+          CapturedImagePreview(
+            lastCapturedPath: (state as CameraReady).lastCapturedPath!,
+            files: files,
+          ),
+        );
+      }
+    } catch (e) {
+      emit(CameraError('Unexpected error: $e'));
     }
   }
 

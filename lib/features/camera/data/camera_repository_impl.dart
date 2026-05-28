@@ -28,12 +28,14 @@ class CameraRepositoryImpl implements CameraRepository {
     );
 
     await _controller!.initialize();
+    AppLogger.i('Camera controller initialized');
     return _controller!;
   }
 
   @override
   Future<String> capture() async {
     if (_controller == null || !_controller!.value.isInitialized) {
+      AppLogger.i('Camera controller not initialized');
       throw Exception('Camera is not initialized.');
     }
 
@@ -63,38 +65,62 @@ class CameraRepositoryImpl implements CameraRepository {
 
   @override
   Future<void> setFocusMode(FocusMode focusMode) async {
-    checkControllerInitialize();
-    await _controller!.setFocusMode(focusMode);
+    try {
+      checkControllerInitialize();
+      await _controller!.setFocusMode(focusMode);
+    } catch (e) {
+      AppLogger.e('Error setting focus mode: $e');
+    }
   }
 
   @override
   Future<void> setFocusPoint(Offset point) async {
-    checkControllerInitialize();
-    await _controller!.setFocusPoint(point);
+    try {
+      checkControllerInitialize();
+      await _controller!.setFocusPoint(point);
+    } catch (e) {
+      AppLogger.e('Error setting focus point: $e');
+    }
   }
 
   @override
   Future<void> setExposureMode(ExposureMode exposureMode) async {
-    checkControllerInitialize();
-    await _controller!.setExposureMode(exposureMode);
+    try {
+      checkControllerInitialize();
+      await _controller!.setExposureMode(exposureMode);
+    } catch (e) {
+      AppLogger.e('Error setting exposure mode: $e');
+    }
   }
 
   @override
   Future<void> setExposurePoint(Offset point) async {
-    checkControllerInitialize();
-    await _controller!.setExposurePoint(point);
+    try {
+      checkControllerInitialize();
+      await _controller!.setExposurePoint(point);
+    } catch (e) {
+      AppLogger.e('Error setting exposure point: $e');
+    }
   }
 
   @override
   Future<void> setExposureOffset(double offset) async {
-    checkControllerInitialize();
-    await _controller!.setExposureOffset(offset);
+    try {
+      checkControllerInitialize();
+      await _controller!.setExposureOffset(offset);
+    } catch (e) {
+      AppLogger.e('Error setting exposure offset: $e');
+    }
   }
 
   @override
   Future<void> setZoomLevel(double zoomLevel) async {
-    checkControllerInitialize();
-    await _controller!.setZoomLevel(zoomLevel);
+    try {
+      checkControllerInitialize();
+      await _controller!.setZoomLevel(zoomLevel);
+    } catch (e) {
+      AppLogger.e('Error setting zoom level: $e');
+    }
   }
 
   @override
@@ -119,6 +145,7 @@ class CameraRepositoryImpl implements CameraRepository {
 
   void checkControllerInitialize() {
     if (_controller == null || !_controller!.value.isInitialized) {
+      AppLogger.i('Camera controller not initialized');
       throw Exception('Camera is not initialized.');
     }
   }

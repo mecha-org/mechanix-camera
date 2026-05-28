@@ -18,7 +18,10 @@ class _CaptureFlashOverlayState extends State<CaptureFlashOverlay>
   @override
   void initState() {
     super.initState();
+    _initializeAnimation();
+  }
 
+  void _initializeAnimation() {
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),

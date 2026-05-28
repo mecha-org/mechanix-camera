@@ -10,10 +10,10 @@ class AppConstants {
 }
 
 abstract final class CameraFocusConstants {
-  // ── Focus box ────────────────────────────────────────────────
+  // Focus box
   static const double focusBoxSize = 240.0;
 
-  // ── Brightness line ──────────────────────────────────────────
+  // Brightness line
   static const double brightnessIconLeftMargin = 8.0;
   static const double brightnessIconSize = 20.0;
   static const double brightnessContainerWidth = brightnessIconSize + 8.0;

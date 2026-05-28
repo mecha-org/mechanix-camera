@@ -24,6 +24,10 @@ class _CameraFocusState extends State<CameraFocus>
   void initState() {
     super.initState();
 
+    _initializeAnimation();
+  }
+
+  void _initializeAnimation() {
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 250),

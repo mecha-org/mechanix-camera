@@ -97,44 +97,69 @@ class CameraSettingsBloc
     SetFocusMode event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    await _repository.setFocusMode(event.focusMode);
-    emit(state.copyWith(focusMode: event.focusMode));
+    try {
+      await _repository.setFocusMode(event.focusMode);
+      emit(state.copyWith(focusMode: event.focusMode));
+    } catch (e) {
+      AppLogger.e('Error setting focus mode: $e');
+    }
   }
 
   Future<void> _onSetFocusPoint(
     SetFocusPoint event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    await _repository.setFocusPoint(event.point);
+    try {
+      await _repository.setFocusPoint(event.point);
+    } catch (e) {
+      AppLogger.e('Error setting focus point: $e');
+    }
   }
 
   Future<void> _onSetExposureMode(
     SetExposureMode event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    await _repository.setExposureMode(event.exposureMode);
-    emit(state.copyWith(exposureMode: event.exposureMode));
+    try {
+      await _repository.setExposureMode(event.exposureMode);
+      emit(state.copyWith(exposureMode: event.exposureMode));
+    } catch (e) {
+      AppLogger.e('Error setting exposure mode: $e');
+    }
   }
 
   Future<void> _onSetExposurePoint(
     SetExposurePoint event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    await _repository.setExposurePoint(event.point);
+    try {
+      await _repository.setExposurePoint(event.point);
+    } catch (e) {
+      AppLogger.e('Error setting exposure point: $e');
+    }
   }
 
   Future<void> _onSetExposureOffset(
     SetExposureOffset event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    if (event.offset >= state.minExposureOffset &&
-        event.offset <= state.maxExposureOffset) {
-      _exposureDebounce?.cancel();
-      _exposureDebounce = Timer(const Duration(milliseconds: 16), () async {
-        await _repository.setExposureOffset(event.offset);
-      });
+    try {
+      if (event.offset >= state.minExposureOffset &&
+          event.offset <= state.maxExposureOffset) {
+        _exposureDebounce?.cancel();
 
-      emit(state.copyWith(exposureOffset: event.offset));
+        _exposureDebounce = Timer(const Duration(milliseconds: 16), () async {
+          try {
+            await _repository.setExposureOffset(event.offset);
+          } catch (e) {
+            AppLogger.e('Error setting exposure offset: $e');
+          }
+        });
+
+        emit(state.copyWith(exposureOffset: event.offset));
+      }
+    } catch (e) {
+      AppLogger.e('Error handling exposure offset: $e');
     }
   }
 
@@ -142,11 +167,15 @@ class CameraSettingsBloc
     SetZoomLevel event,
     Emitter<CameraSettingsState> emit,
   ) async {
-    if (event.zoomLevel >= state.minZoomLevel &&
-        event.zoomLevel <= state.maxZoomLevel) {
-      await _repository.setZoomLevel(event.zoomLevel);
+    try {
+      if (event.zoomLevel >= state.minZoomLevel &&
+          event.zoomLevel <= state.maxZoomLevel) {
+        await _repository.setZoomLevel(event.zoomLevel);
 
-      emit(state.copyWith(zoomLevel: event.zoomLevel));
+        emit(state.copyWith(zoomLevel: event.zoomLevel));
+      }
+    } catch (e) {
+      AppLogger.e('Error setting zoom level: $e');
     }
   }
 }
