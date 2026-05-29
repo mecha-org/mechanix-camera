@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mechanix_camera/core/utils/helpers.dart';
+import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
+import 'package:mechanix_camera/features/camera/bloc/camera_settings/camera_settings_bloc.dart';
+
+class CaptureButton extends StatelessWidget {
+  const CaptureButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CameraSettingsBloc, CameraSettingsState>(
+      builder: (context, state) {
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              if (context.read<CameraBloc>().state is CameraReady) {
+                context.read<CameraBloc>().add(CameraCaptureRequested());
+              }
+            },
+            customBorder: const CircleBorder(),
+            child: AnimatedRotation(
+              turns: getRotationTurns(state.orientation),
+              duration: const Duration(milliseconds: 300),
+              child: Container(
+                height: 80,
+                width: 80,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  shape: BoxShape.circle,
+                ),
+                child: Container(
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
