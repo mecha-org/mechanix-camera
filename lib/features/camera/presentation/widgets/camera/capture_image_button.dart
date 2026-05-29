@@ -25,9 +25,10 @@ class CapturedImageButton extends StatelessWidget {
             child: AnimatedRotation(
               turns: getRotationTurns(settingsState.orientation),
               duration: const Duration(milliseconds: 300),
-              child: SizedBox(
+              child: Container(
                 height: 48,
                 width: 48,
+                decoration: const BoxDecoration(shape: BoxShape.circle),
                 child: BlocBuilder<CameraBloc, CameraState>(
                   builder: (context, state) {
                     return AnimatedSwitcher(
@@ -50,10 +51,21 @@ class CapturedImageButton extends StatelessWidget {
                       },
                       child:
                           state is CameraReady && state.lastCapturedPath != null
-                          ? _ImageTile(path: state.lastCapturedPath!)
+                          ? Container(
+                              width: 56,
+                              height: 56,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: _ImageTile(path: state.lastCapturedPath!),
+                            )
                           : Container(
                               key: const ValueKey('placeholder'),
-                              color: Colors.white,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                shape: BoxShape.circle,
+                              ),
                             ),
                     );
                   },

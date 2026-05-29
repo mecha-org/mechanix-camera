@@ -63,7 +63,10 @@ class _CameraFocusState extends State<CameraFocus>
             height: CameraFocusConstants.focusBoxSize,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 1.5),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.onSurface,
+                  width: 1.5,
+                ),
               ),
             ),
           ),

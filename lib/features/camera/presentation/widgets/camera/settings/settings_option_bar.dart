@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mechanix_camera/core/utils/app_colors.dart';
 import 'package:mechanix_camera/features/camera/model/camera_types.dart';
 
 class SettingsOptionBar extends StatelessWidget {
@@ -17,6 +18,7 @@ class SettingsOptionBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8),
       width: double.infinity,
       height: 48,
+      color: AppColors.selectionMenuColor,
       child: Row(
         mainAxisAlignment: alignment,
         children: items
@@ -37,7 +39,10 @@ class _OptionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: onTap,
-      child: Text(label, style: const TextStyle(color: Colors.white)),
+      child: Text(
+        label,
+        style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+      ),
     );
   }
 }

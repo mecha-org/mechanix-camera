@@ -27,11 +27,17 @@ class CaptureButton extends StatelessWidget {
                 height: 80,
                 width: 80,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(color: Colors.white24),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  shape: BoxShape.circle,
+                ),
                 child: Container(
                   height: 60,
                   width: 60,
-                  decoration: const BoxDecoration(color: Colors.white),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurface,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),

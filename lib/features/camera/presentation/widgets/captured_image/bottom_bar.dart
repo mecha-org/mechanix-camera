@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mechanix_camera/core/utils/app_colors.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 
 class BottomBar extends StatelessWidget {
@@ -8,7 +9,7 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black,
+      color: AppColors.bottomBarColor,
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 8),
       child: Row(
         spacing: 2,

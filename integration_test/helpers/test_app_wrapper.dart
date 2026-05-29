@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mechanix_camera/core/utils/app_routes.dart';
+import 'package:mechanix_camera/core/utils/app_theme.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_settings/camera_settings_bloc.dart';
 import 'package:mechanix_camera/features/camera/data/camera_repository.dart';
@@ -37,15 +38,8 @@ class TestAppWrapper extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           themeMode: ThemeMode.dark,
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.deepPurple,
-              brightness: Brightness.dark,
-            ),
-          ),
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          ),
+          darkTheme: AppTheme.dark,
+          theme: AppTheme.light,
           routes: AppRoutes.routes,
           home: child,
         ),

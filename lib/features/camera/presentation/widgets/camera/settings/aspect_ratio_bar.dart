@@ -13,19 +13,19 @@ class AspectRatioBar extends StatelessWidget {
       items: [
         SettingsOptionItem(
           label: AppLocalizations.of(context)!.aspectRatio11,
-          onTap: () {},
+          onTap: () {}, // TODO: Not implemented yet
         ),
         SettingsOptionItem(
           label: AppLocalizations.of(context)!.aspectRatio43,
-          onTap: () {},
+          onTap: () {}, //TODO: Not implemented yet
         ),
         SettingsOptionItem(
           label: AppLocalizations.of(context)!.aspectRatio169,
-          onTap: () {},
+          onTap: () {}, //TODO: Not implemented yet
         ),
         SettingsOptionItem(
           label: AppLocalizations.of(context)!.aspectRatioFull,
-          onTap: () {},
+          onTap: () {}, //TODO: Not implemented yet
         ),
       ],
     );
