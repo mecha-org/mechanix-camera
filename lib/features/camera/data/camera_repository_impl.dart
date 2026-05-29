@@ -34,39 +34,41 @@ class CameraRepositoryImpl implements CameraRepository {
 
   @override
   Future<String> capture() async {
-    if (_controller == null || !_controller!.value.isInitialized) {
-      AppLogger.i('Camera controller not initialized');
-      throw Exception('Camera is not initialized.');
+    try {
+      isCameraControllerInitialized();
+
+      await checkStorage();
+
+      final defaultImagePath = getDefaultStoragePath();
+
+      final savePath =
+          '$defaultImagePath/${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+      if (!await Directory(defaultImagePath).exists()) {
+        await Directory(defaultImagePath).create(recursive: true);
+      }
+
+      final file = await _controller!.takePicture();
+
+      await file.saveTo(savePath);
+
+      final tempFile = File(file.path);
+
+      if (await tempFile.exists()) {
+        await tempFile.delete();
+      }
+
+      return savePath;
+    } catch (e) {
+      AppLogger.i('Error capturing image: $e');
+      rethrow;
     }
-
-    await checkStorage();
-
-    final defaultImagePath = getDefaultStoragePath();
-
-    final savePath =
-        '$defaultImagePath/${DateTime.now().millisecondsSinceEpoch}.jpg';
-
-    if (!await Directory(defaultImagePath).exists()) {
-      await Directory(defaultImagePath).create(recursive: true);
-    }
-
-    final file = await _controller!.takePicture();
-
-    await file.saveTo(savePath);
-
-    final tempFile = File(file.path);
-
-    if (await tempFile.exists()) {
-      await tempFile.delete();
-    }
-
-    return savePath;
   }
 
   @override
   Future<void> setFocusMode(FocusMode focusMode) async {
     try {
-      checkControllerInitialize();
+      isCameraControllerInitialized();
       await _controller!.setFocusMode(focusMode);
     } catch (e) {
       AppLogger.e('Error setting focus mode: $e');
@@ -76,7 +78,7 @@ class CameraRepositoryImpl implements CameraRepository {
   @override
   Future<void> setFocusPoint(Offset point) async {
     try {
-      checkControllerInitialize();
+      isCameraControllerInitialized();
       await _controller!.setFocusPoint(point);
     } catch (e) {
       AppLogger.e('Error setting focus point: $e');
@@ -86,7 +88,7 @@ class CameraRepositoryImpl implements CameraRepository {
   @override
   Future<void> setExposureMode(ExposureMode exposureMode) async {
     try {
-      checkControllerInitialize();
+      isCameraControllerInitialized();
       await _controller!.setExposureMode(exposureMode);
     } catch (e) {
       AppLogger.e('Error setting exposure mode: $e');
@@ -96,7 +98,7 @@ class CameraRepositoryImpl implements CameraRepository {
   @override
   Future<void> setExposurePoint(Offset point) async {
     try {
-      checkControllerInitialize();
+      isCameraControllerInitialized();
       await _controller!.setExposurePoint(point);
     } catch (e) {
       AppLogger.e('Error setting exposure point: $e');
@@ -106,7 +108,7 @@ class CameraRepositoryImpl implements CameraRepository {
   @override
   Future<void> setExposureOffset(double offset) async {
     try {
-      checkControllerInitialize();
+      isCameraControllerInitialized();
       await _controller!.setExposureOffset(offset);
     } catch (e) {
       AppLogger.e('Error setting exposure offset: $e');
@@ -116,7 +118,7 @@ class CameraRepositoryImpl implements CameraRepository {
   @override
   Future<void> setZoomLevel(double zoomLevel) async {
     try {
-      checkControllerInitialize();
+      isCameraControllerInitialized();
       await _controller!.setZoomLevel(zoomLevel);
     } catch (e) {
       AppLogger.e('Error setting zoom level: $e');
@@ -143,7 +145,7 @@ class CameraRepositoryImpl implements CameraRepository {
     _controller = null;
   }
 
-  void checkControllerInitialize() {
+  void isCameraControllerInitialized() {
     if (_controller == null || !_controller!.value.isInitialized) {
       AppLogger.i('Camera controller not initialized');
       throw Exception('Camera is not initialized.');
@@ -175,10 +177,10 @@ class CameraRepositoryImpl implements CameraRepository {
     final homeDir = Platform.environment['HOME'];
 
     if (homeDir == null || homeDir.isEmpty) {
-      return '/tmp/Camera';
+      return AppConstants.tempStoragePath;
     }
 
-    return '$homeDir/Pictures/Camera';
+    return homeDir + AppConstants.storagePath;
   }
 
   void orientationChange() {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mechanix_camera/core/utils/app_colors.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
 
 class CapturedImage extends StatelessWidget {
@@ -26,21 +27,24 @@ class CapturedImage extends StatelessWidget {
                 child: state.files.isEmpty
                     ? const SizedBox.shrink()
                     : RepaintBoundary(
-                        child: SizedBox(
+                        child: Container(
                           height: 70,
                           width: 620,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            itemCount: state.files.length,
-                            itemBuilder: (context, index) {
-                              return _ImageTile(
-                                path: state.files[index].path,
-                                isSelected:
-                                    state.files[index].path ==
-                                    state.lastCapturedPath,
-                              );
-                            },
+                          margin: const EdgeInsets.symmetric(vertical: 12),
+                          child: RepaintBoundary(
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              itemCount: state.files.length,
+                              itemBuilder: (context, index) {
+                                return _ImageTile(
+                                  path: state.files[index].path,
+                                  isSelected:
+                                      state.files[index].path ==
+                                      state.lastCapturedPath,
+                                );
+                              },
+                            ),
                           ),
                         ),
                       ),
@@ -69,8 +73,10 @@ class _ImageTile extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
-          color: Colors.black,
-          border: isSelected ? Border.all(color: Colors.blue, width: 2) : null,
+          color: Theme.of(context).colorScheme.surface,
+          border: isSelected
+              ? Border.all(color: AppColors.selectionBorderColor, width: 2)
+              : null,
         ),
         child: _ImageView(path: path),
       ),

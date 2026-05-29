@@ -23,7 +23,7 @@ class CameraScreen extends StatelessWidget {
         Align(
           alignment: Alignment.bottomCenter,
           child: ColoredBox(
-            color: Colors.black,
+            color: Theme.of(context).colorScheme.primaryContainer,
             child: BlocBuilder<CameraBloc, CameraState>(
               builder: (context, state) => switch (state) {
                 CameraReady(isSettingsOpen: false) => const SizedBox.shrink(),

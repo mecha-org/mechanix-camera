@@ -7,10 +7,10 @@ class CapturedImageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: CapturedImage(),
-      backgroundColor: Colors.black,
-      bottomNavigationBar: BottomBar(),
+    return Scaffold(
+      body: const CapturedImage(),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      bottomNavigationBar: const BottomBar(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mechanix_camera/core/utils/app_colors.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
 import 'package:mechanix_camera/core/widgets/images.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_bloc.dart';
@@ -30,6 +31,7 @@ class _BottomSettingsBar extends StatelessWidget {
     return Container(
       height: 60,
       width: double.infinity,
+      color: AppColors.bottomBarColor,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

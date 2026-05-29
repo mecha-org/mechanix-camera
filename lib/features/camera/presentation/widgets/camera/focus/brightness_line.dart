@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mechanix_camera/core/utils/app_colors.dart';
 import 'package:mechanix_camera/core/utils/constants.dart';
 import 'package:mechanix_camera/features/camera/bloc/camera_settings/camera_settings_bloc.dart';
 
@@ -27,6 +28,9 @@ class _BrightnessLineState extends State<BrightnessLine> {
     super.dispose();
   }
 
+  // Handles vertical drag gestures for adjusting camera exposure.
+  // Updates the brightness icon position within the allowed range,
+  // normalizes the drag position, converts it into an exposure value
   void _onVerticalDrag(DragUpdateDetails details) {
     final newOffset = (_iconOffsetY.value - details.delta.dy).clamp(
       -CameraFocusConstants.brightnessHalfLineHeight,
@@ -80,7 +84,7 @@ class _BrightnessLineState extends State<BrightnessLine> {
                 _Segment(
                   height: upperHeight,
                   width: CameraFocusConstants.brightnessLineWidth,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 const SizedBox(
                   height: CameraFocusConstants.brightnessLineIconGap,
@@ -88,7 +92,7 @@ class _BrightnessLineState extends State<BrightnessLine> {
                 const Icon(
                   Icons.sunny,
                   size: CameraFocusConstants.brightnessIconSize,
-                  color: Colors.amber,
+                  color: AppColors.exposureColor,
                 ),
                 const SizedBox(
                   height: CameraFocusConstants.brightnessLineIconGap,
@@ -96,7 +100,7 @@ class _BrightnessLineState extends State<BrightnessLine> {
                 _Segment(
                   height: lowerHeight,
                   width: CameraFocusConstants.brightnessLineWidth,
-                  color: Colors.amber,
+                  color: AppColors.exposureColor,
                 ),
               ],
             );

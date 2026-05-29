@@ -69,7 +69,9 @@ class _CaptureFlashOverlayState extends State<CaptureFlashOverlay>
 
           return IgnorePointer(
             child: ColoredBox(
-              color: Colors.black.withValues(alpha: _opacity.value),
+              color: Theme.of(
+                context,
+              ).colorScheme.surface.withValues(alpha: _opacity.value),
             ),
           );
         },

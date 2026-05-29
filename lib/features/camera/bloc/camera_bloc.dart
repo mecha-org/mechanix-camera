@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:camera/camera.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mechanix_camera/core/utils/app_logger.dart';
 import 'package:mechanix_camera/features/camera/data/camera_repository.dart';
 import 'package:mechanix_camera/features/camera/model/camera_types.dart';
 
@@ -16,6 +17,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
   CameraController get controller {
     final ctrl = _repository.controller;
     if (ctrl == null) {
+      AppLogger.i('CameraController accessed before initialization.');
       throw StateError('CameraController accessed before initialization.');
     }
     return ctrl;

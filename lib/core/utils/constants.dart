@@ -7,6 +7,8 @@ class AppConstants {
   static const String aspectRatio = 'assets/icons/aspect_ratio.png';
   static const String close = 'assets/icons/close.png';
   static const String settings = 'assets/icons/settings.png';
+  static const String storagePath = '/Pictures/Camera';
+  static const String tempStoragePath = '/tmp/Camera';
 }
 
 abstract final class CameraFocusConstants {
