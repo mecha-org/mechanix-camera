@@ -7,7 +7,7 @@ on:
       - main
       - dev
       - pre-release
-      - build
+      - build*
     paths:
       - ".github/workflows/build-app-aarch64.yml"
       - "utils/**"
