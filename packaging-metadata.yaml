@@ -1,9 +1,0 @@
-name: packaging-metadata
-version: 1.0.0
-summary: Metadata for Mechanix Camera app packaging
-applications:
-  - name: camera
-    folder: .
-    binary: mechanix_camera
-    description: "Mechanix Camera application"
-    maintainer: "Ojas <ojasc@ext.mechasystems.com>"

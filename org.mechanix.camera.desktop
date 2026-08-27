@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Mechanix Camera
+Comment=Camera for Mechanix OS
+Exec=mechanix_camera -s 1
+Icon=org.mechanix.camera
+Terminal=false
+Categories=Graphics;Photography;
+StartupNotify=true
+StartupWMClass=org.mechanix.camera
